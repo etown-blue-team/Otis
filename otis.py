@@ -9,12 +9,18 @@ def sigmoid(x):
 def sigmoid_der(x):
     return sigmoid(x)*(1-sigmoid(x))
 
+# Smoker, Obese, Excersize, Causing causing Attr 1, Not Causing Attr 2
 
-feature_set = np.array([[0,1,0],[0,0,1],[1,0,0],[1,1,0],[1,1,1]]) #Our inputs
-labels = np.array([[1,0,0,1,1]]) #The Outputs
-labels = labels.reshape(5,1)
+
+
+feature_set = np.array([[0,0,1,0,0],[1,1,0,0,0],[0,1,0,0,0],[1,0,0,1,0],[0,0,1,0,1],[1,0,0,0,0],[1,1,0,1,0],[0,1,0,0,0],[1,1,0,1,0],[0,1,0,0,0],[0,0,1,1,0],[1,1,0,0,1],[1,0,0,0,1],[0,1,0,0,0],[1,0,0,0,0],[1,0,1,0,1],[1,0,0,1,0],[0,1,0,0,1],[0,1,0,0,0],[1,1,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,1,0,1,0],[0,1,1,0,0],[1,0,0,0,1],[1,1,0,0,0],[1,0,1,0,0]
+]) #Our inputs
+labels = np.array([[0,1,1,1,0,0,1,1,1,1,1,0,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0]]) #The Outputs
+
+
+labels = labels.reshape(27,1)
 np.random.seed(42)
-weights = np.random.rand(3,1)
+weights = np.random.rand(5,1)
 bias = np.random.rand(1)
 
 lr =0.05 #Learning Rate
@@ -41,6 +47,6 @@ for epoch in range(20000): #20,000 Runs of Training Data
         bias -= lr * num
 
 
-single_point = np.array([0,1,0])
+single_point = np.array([0,1,0,0,0])
 result = sigmoid(np.dot(single_point,weights) + bias)
 print(result)
