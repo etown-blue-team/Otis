@@ -14,9 +14,9 @@ class DictionaryBuilder:
                 
     def apply(df):
         '''
-		Will eventually apply the dictionary to the dataframe and return the new dataframe
-		'''
-		pass
+	Will eventually apply the dictionary to the dataframe and return the new dataframe
+	'''
+	pass
     
     def get():
         return _key_list
