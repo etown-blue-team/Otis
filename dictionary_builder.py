@@ -13,7 +13,10 @@ class DictionaryBuilder:
                 _key_list[x] = keys
                 
     def apply(df):
-        pass
+        '''
+		Will eventually apply the dictionary to the dataframe and return the new dataframe
+		'''
+		pass
     
     def get():
         return _key_list
