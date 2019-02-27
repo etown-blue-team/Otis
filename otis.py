@@ -1,7 +1,6 @@
 #https://stackabuse.com/creating-a-neural-network-from-scratch-in-python/
 
 import numpy as np
-from matplotlib import pyplot as plt
 input = np.linspace(-10, 10, 100)
 
 def sigmoid(x):
@@ -13,9 +12,8 @@ def sigmoid_der(x):
 
 
 
-feature_set = np.array([[0,0,1,0,0],[1,1,0,0,0],[0,1,0,0,0],[1,0,0,1,0],[0,0,1,0,1],[1,0,0,0,0],[1,1,0,1,0],[0,1,0,0,0],[1,1,0,1,0],[0,1,0,0,0],[0,0,1,1,0],[1,1,0,0,1],[1,0,0,0,1],[0,1,0,0,0],[1,0,0,0,0],[1,0,1,0,1],[1,0,0,1,0],[0,1,0,0,1],[0,1,0,0,0],[1,1,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,1,0,1,0],[0,1,1,0,0],[1,0,0,0,1],[1,1,0,0,0],[1,0,1,0,0]
-]) #Our inputs
-labels = np.array([[0,1,1,1,0,0,1,1,1,1,1,0,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0]]) #The Outputs
+feature_set = np.array([[0,0,1,0,0],[1,1,0,0,0],[0,1,0,0,0],[1,0,0,1,0],[0,0,1,0,1],[1,0,0,0,0],[1,1,0,1,0],[0,1,0,0,0],[1,1,0,1,0],[0,1,0,0,0],[0,0,1,1,0],[1,1,0,0,1],[1,0,0,0,1],[0,1,0,0,0],[1,0,0,0,0],[1,0,1,0,1],[1,0,0,1,0],[0,1,0,0,1],[0,1,0,0,0],[1,1,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,1,0,1,0],[0,1,1,0,0],[1,0,0,0,1],[1,1,0,0,0],[1,0,1,0,0]]) #Our inputs
+labels = np.array([0,1,1,1,0,0,1,1,1,1,1,0,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0]]) #The Outputs
 
 
 labels = labels.reshape(27,1)
@@ -28,7 +26,7 @@ lr =0.05 #Learning Rate
 for epoch in range(20000): #20,000 Runs of Training Data
 
     #Feedforward
-    XW = np.dot(feature_set, weights) + bias  #Input dot Weight · Bias  θx,w = 1/(1+e^(-X·W))
+    XW = np.dot(feature_set, weights) + bias  #Input dot Weight Bias x,w = 1/(1+e^(-XW))
     z = sigmoid(XW) #Put it between 1 and 0 for outputs, Z is our predicted output
 
     #Backpropigation
@@ -47,6 +45,6 @@ for epoch in range(20000): #20,000 Runs of Training Data
         bias -= lr * num
 
 
-single_point = np.array([0,1,0,0,0])
+single_point = np.array([0,0,0,0,0])
 result = sigmoid(np.dot(single_point,weights) + bias)
 print(result)
