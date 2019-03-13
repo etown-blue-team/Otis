@@ -16,7 +16,9 @@ class DictionaryBuilder:
                 
     def map(df):
 	'''Maps the dictionary to the dataframe, replacing any non-numerical entries with integers'''
-	pass
+	
+	for x in _key_list:
+		df[x].map(_key_list[x])
     
     def get():		# Returns the master dictionary containing the created dictionaries
         return _key_list
