@@ -2,14 +2,18 @@
 
 from sklearn import datasets
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 
 np.random.seed(0)
+matplotlib.use("Agg")
 feature_set, labels = datasets.make_moons(100, noise=0.10)
 plt.figure(figsize=(10, 7))
 plt.scatter(feature_set[:, 0], feature_set[:, 1], c=labels, cmap=plt.cm.winter)
 
 labels = labels.reshape(100, 1)
+
+
 
 
 def sigmoid(x):
@@ -24,7 +28,7 @@ wh = np.random.rand(len(feature_set[0]), 4)
 wo = np.random.rand(4, 1)
 lr = 0.5
 
-for epoch in range(200000):
+for epoch in range(2000):
     # feedforward
 
     zh = np.dot(feature_set, wh)
@@ -61,3 +65,4 @@ for epoch in range(200000):
 
     wh -= lr * dcost_wh
     wo -= lr * dcost_wo
+
