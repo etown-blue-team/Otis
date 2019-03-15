@@ -44,6 +44,7 @@ class DictionaryBuilder:
 		     1   1   1
 			 2   2   2
 		'''
+
 		for x in key_list:
-			df[x].map(key_list[x])
+			df[x] = df[x].map(key_list[x])
 		return df
