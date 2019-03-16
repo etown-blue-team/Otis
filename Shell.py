@@ -14,8 +14,8 @@ def build(df):
 	>>>build(df)
 
 	_key_list = {c1: {a:1,d:2},
-			     c2: {b:1,e:2},
-			     c3: {c:1,f:2}}
+		     c2: {b:1,e:2},
+	             c3: {c:1,f:2}}
 	'''
 	
 	key_list = {}	# Contains column names as keys and their created dictionaries
@@ -36,13 +36,13 @@ def map(df, key_list):
 		
 	df = c1  c2  c3
 	     a   b   c
-		 d   e   f
+	     d   e   f
 		
 	>>>map(df)
 
 	df = c1  c2  c3
 	     1   1   1
-		 2   2   2
+	     2   2   2
 	'''
 	global mdf
 	mdf = df
@@ -87,15 +87,15 @@ while (True):
 	cmd = input('Otis> ')
 	if cmd.lower() == 'exit':
 		break
-	elif cmd.split()[0] in cmd_list:		#If the first argument is a valid command
+	elif cmd.split()[0] in cmd_list:			#If the first argument is a valid command
 		if len(cmd.split()) == 1:			#If the user did not supply any arguments
 			if len(cmd_list[cmd]) > 1:		#If the function to call takes any arguments
 				args = cmd_list[cmd][1:]	
 				cmd_list[cmd][0](args[0])
-			else:							#If the fuction to call takes no arguments
+			else:					#If the fuction to call takes no arguments
 				cmd_list[cmd][0]()
-		else:								#If the user did supply arguments
+		else:						#If the user did supply arguments
 			args = cmd.split()
-			cmd_list[args[0]][0](args[1])	#Can only accept one argument at the moment
+			cmd_list[args[0]][0](args[1])		#Can only accept one argument at the moment
 	else:
 		print("Illegal command")
