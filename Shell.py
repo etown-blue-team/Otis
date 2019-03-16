@@ -7,15 +7,17 @@ def build(df):
 	'''
 	Builds a dictionary of the unique entries in each non-numerical column and an assigned integer
 	
-	df = c1  c2  c3
-         a   b   c
-         d   e   f
+	df = 
+	c1	c2	c3
+	a	b	c
+	d	e	c
 
-	>>>build(df)
+	>>>keylist = build(df)
 
-	_key_list = {c1: {a:1,d:2},
-			     c2: {b:1,e:2},
-			     c3: {c:1,f:2}}
+	key_list = 
+	{c1:{a:1,d:2},
+	 c2:{b:1,e:2},
+	 c3:{c:1}}
 	'''
 	
 	key_list = {}	# Contains column names as keys and their created dictionaries
@@ -34,15 +36,17 @@ def map(df, key_list):
 	'''
 	Maps the dictionary to the dataframe, replacing any non-numerical entries with integers
 		
-	df = c1  c2  c3
-	     a   b   c
-		 d   e   f
+	df = 
+	c1	c2	c3
+	a	b	c
+	d	e	c
 		
 	>>>map(df)
 
-	df = c1  c2  c3
-	     1   1   1
-		 2   2   2
+	df = 
+	c1	c2	c3
+	1	1	1
+	2	2	1
 	'''
 	global mdf
 	mdf = df
@@ -59,7 +63,7 @@ def import_data(file=""):
 		for x in list(df):
 			if df[x].dtype is np.dtype('O'):
 				keys = build(df)
-				df = map(df,keys)
+				map(df,keys)
 				break
 	else:
 		ch = input("Data set already loaded. Overwrite? (y/n) ")
@@ -77,12 +81,21 @@ def export_data(file=""):
 			file = input("File name: ")
 		mdf.to_csv(str(file))
 
-def view_data():
-	n = int(input("Number of rows: "))
-	print(mdf.head(n))
+def view_data(n=0):
+	if mdf.empty:
+		print("Empty dataframe. Use import to load a data set")
+	else:
+		if n == 0:
+			n = int(input("Number of rows: "))
+		print(mdf.head(int(n)))
+
+def list_commands():
+	global cmd_list
+	for x in cmd_list:
+		print(x)
 
 #Shell starts here
-cmd_list = {'import': [import_data],'export': [export_data],'view':[view_data]}	#Dictionary of possible commands and which function to call with those commands
+cmd_list = {'import': [import_data],'export': [export_data],'view':[view_data],'help':[list_commands]}	#Dictionary of possible commands and which function to call with those commands
 while (True):
 	cmd = input('Otis> ')
 	if cmd.lower() == 'exit':
