@@ -2,9 +2,11 @@ import pandas as pd
 import numpy as np
 
 class DictionaryBuilder:
-	_key_list = {}	# Contains column names as keys and their created dictionaries
+	def __init__(self, data):
+		self.key_list = {}	# Contains column names as keys and their created dictionaries
+		self.df = data
 
-	def build(self, df):
+	def build(self):
 		'''
 		Builds a dictionary of the unique entries in each non-numerical column and an assigned integer
 	
@@ -19,18 +21,17 @@ class DictionaryBuilder:
 				     c3: {c:1,f:2}}
 		'''
 	
-		for x in list(df):
-			if df[x].dtype is np.dtype('O'):
-				unique = df[x].unique()
+		for x in list(self.df):
+			if self.df[x].dtype is np.dtype('O'):
+				unique = self.df[x].unique()
 				keys = {}
 				i=0
 				for y in unique:
 					keys[y] = i
 					i += 1
-					self._key_list[x] = keys
-		return self._key_list
+					self.key_list[x] = keys
 
-	def map(self, df, key_list):
+	def map(self):
 		'''
 		Maps the dictionary to the dataframe, replacing any non-numerical entries with integers
 		
@@ -45,6 +46,6 @@ class DictionaryBuilder:
 			 2   2   2
 		'''
 
-		for x in key_list:
-			df[x] = df[x].map(key_list[x])
-		return df
+		for x in self.key_list:
+			self.df[x] = self.df[x].map(self.key_list[x])
+		return self.df
