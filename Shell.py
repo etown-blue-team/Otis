@@ -3,58 +3,9 @@ import pandas as pd
 
 mdf = pd.DataFrame()	#Master dataframe accessible by all functions
 
-def build(df):
-	'''
-	Builds a dictionary of the unique entries in each non-numerical column and an assigned integer
-	
-	df = 
-	c1	c2	c3
-	a	b	c
-	d	e	c
-
-	>>>keylist = build(df)
-
-	key_list = 
-	{c1:{a:1,d:2},
-	 c2:{b:1,e:2},
-	 c3:{c:1}}
-	'''
-	
-	key_list = {}	# Contains column names as keys and their created dictionaries
-	for x in list(df):
-		if df[x].dtype is np.dtype('O'):
-			unique = df[x].unique()
-			keys = {}
-			i=0
-			for y in unique:
-				keys[y] = i
-				i += 1
-				key_list[x] = keys
-	return key_list
-
-def map(df, key_list):
-	'''
-	Maps the dictionary to the dataframe, replacing any non-numerical entries with integers
-		
-	df = 
-	c1	c2	c3
-	a	b	c
-	d	e	c
-		
-	>>>map(df)
-
-	df = 
-	c1	c2	c3
-	1	1	1
-	2	2	1
-	'''
-	global mdf
-	mdf = df
-	for x in key_list:
-		mdf[x] = df[x].map(key_list[x])
-
 def import_data(file=""):
 	'''Asks for a dataset and checks if it needs to build a dictionary or not'''
+	import dictionary_builder as db
 	global mdf
 	if mdf.empty:
 		if file == "":
@@ -62,8 +13,9 @@ def import_data(file=""):
 		df = pd.read_csv(file)
 		for x in list(df):
 			if df[x].dtype is np.dtype('O'):
-				keys = build(df)
-				map(df,keys)
+				b = db.DictionaryBuilder(df)
+				b.build()
+				mdf = b.map()
 				break
 	else:
 		ch = input("Data set already loaded. Overwrite? (y/n) ")
@@ -86,7 +38,7 @@ def view_data(n=0):
 		print("Empty dataframe. Use import to load a data set")
 	else:
 		if n == 0:
-			n = int(input("Number of rows: "))
+			n = input("Number of rows: ")
 		print(mdf.head(int(n)))
 
 def list_commands():
