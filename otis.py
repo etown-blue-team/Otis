@@ -46,7 +46,5 @@ for epoch in range(20000): #20,000 Runs of Training Data
 
 
 data = np.array([0,0,0,0,0])
-print(type(data))
-print(type(weights))
-result = sigmoid(np.dot(data,weights))
+result = sigmoid(np.dot(data,weights)
 print(result)

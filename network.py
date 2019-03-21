@@ -15,11 +15,11 @@ class Network:
 
     def train(self,epochs):
 
-        #Our hidden layer has 4 nodes, each input node need to connect to each hidden layer node
-        hiddenWeights = np.random.rand(len(self.inData[0]),4) #4 is number of 
-    
-        #only 4 weights between hidden later and output
+        #THIS NEEDS TO BE ADJUSTED BASED ON INPUT, ARRAY NEEDS TO BE SHAPED
+        hiddenWeights = np.random.rand(len(self.inData[0]),4) 
+
         outputWeights = np.random.rand(4,1)
+        
 
         learnRate = 0.5
 
@@ -49,6 +49,7 @@ class Network:
 
             #Update Hidden Weights
             hiddenVal = outPredObserved * outPred
+            
             hiddenCost = np.dot(hiddenVal, outputWeights.T)
             hiddenBackProp = np.dot(self.outData.T,self.sigmoid_der(hiddenWeightSum) * hiddenCost)
 
