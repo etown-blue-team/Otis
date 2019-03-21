@@ -56,8 +56,13 @@ class Network:
             outputWeights -= learnRate * outputBackProp
             hiddenWeights -= learnRate * hiddenBackProp
 
+
+        #Store
         self.trainedHidden = hiddenWeights
         self.trainedOutput = outputWeights 
 
-        #To then run data:
-    
+    def run(self, data):
+        hiddenrun = self.sigmoid(np.dot(data,self.trainedHidden))
+        output = self.sigmoid(np.dot(hiddenrun,self.trainedOutput))
+
+        print(output)
