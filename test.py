@@ -1,10 +1,10 @@
-import numpy
-from Network import *
+import numpy as np
+from network import *
 
-data = np.array([[0,0],[0,0],[0,1],[0,1],[1,0],[1,0],[1,1],[1,1]])
-output = np.array([0,0,1,1,1,1,0,0])
+data = np.array([[0,0],[0,1],[1,0],[1,1]])
+output = np.array([[0],[1],[1],[0]])
 
-nerual = Network(data,output)
-Network.train(nerual,500)
-Network.run(nerual,[0,0])
+neural = Network(data,output)
+Network.train(neural,1)
+# Network.run(neural,[0,0])
 
