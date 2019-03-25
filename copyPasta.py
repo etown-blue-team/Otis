@@ -13,8 +13,8 @@ def sigmoid(x):
 def sigmoid_der(x):  
     return sigmoid(x) *(1-sigmoid (x))
 
-wh = np.random.rand(len(feature_set[0]),4)  #2x4
-wo = np.random.rand(4, 1)  
+wh = np.random.rand(len(feature_set[0]),4)  #input weights
+wo = np.random.rand(4, 1)  #output weights
 lr = 0.5
 
 print("FS") #5x2 input data, 5 rows of data 2 inputs each
@@ -29,15 +29,17 @@ for epoch in range(1):
     zo = np.dot(ah, wo)
     ao = sigmoid(zo)
     print("WH") #2x4 each row is all of the weights from 1 input
-    print(wh)
+    print(wh) #input weights
     print("ZH") #5x4
-    print(zh)
+    print(zh) #input weight sums
     print("AH") #5x4
-    print(ah)
+    print(ah) #input node values
     print("WO") #4x1
-    print(wo)
+    print(wo) #output weights
     print("ZO") #4x1
-    print(zo)
+    print(zo) #output weight sums
+    print("AO")
+    print(ah) #output node values
     # Phase1 =======================
 
     error_out = ((1 / 2) * (np.power((ao - labels), 2)))

@@ -34,12 +34,12 @@ class Network:
         
         learningRate = 0.5
 
-        print("IW")
-        print(inputWeights)
-        print("HW")
-        print(hiddenWeights)
-        print("OW")
-        print(outputWeights)
+        # print("IW")
+        # print(inputWeights)
+        # print("HW")
+        # print(hiddenWeights)
+        # print("OW")
+        # print(outputWeights)
 
         for epoch in range(epochs):
             # ===[ Feed Forward ]===
@@ -48,10 +48,10 @@ class Network:
             firstLayerWeightSums = np.dot(self.inData, inputWeights)
             firstLayerNodeValues = self.sigmoid(firstLayerWeightSums)
 
-            print("FLWS")
-            print(firstLayerWeightSums)
-            print("FLNV")
-            print(firstLayerNodeValues)
+            # print("FLWS")
+            # print(firstLayerWeightSums)
+            # print("FLNV")
+            # print(firstLayerNodeValues)
 
             # Hidden -> Hidden
             if hiddenLayers > 1:
@@ -65,10 +65,10 @@ class Network:
                     hiddenLayerWeightSums.append(np.dot(hiddenLayerNodeValues[i - 1], hiddenWeights[i]))
                     hiddenLayerNodeValues.append(self.sigmoid(hiddenLayerWeightSums[i]))
             
-                print("HLWS")
-                print(hiddenLayerWeightSums)
-                print("HLNV")
-                print(hiddenLayerNodeValues)
+                # print("HLWS")
+                # print(hiddenLayerWeightSums)
+                # print("HLNV")
+                # print(hiddenLayerNodeValues)
 
             # Hidden -> Output
             if hiddenLayers > 1:
@@ -77,22 +77,36 @@ class Network:
                 outputLayerWeightSums = np.dot(firstLayerNodeValues, outputWeights)
             outputLayerNodeValues = self.sigmoid(outputLayerWeightSums)
 
-            print("OLWS")
-            print(outputLayerWeightSums)
-            print("OLNV")
-            print(outputLayerNodeValues)
+            # print("OLWS")
+            # print(outputLayerWeightSums)
+            # print("OLNV")
+            # print(outputLayerNodeValues)
 
-            # ===[ Back Propigation ]===
-            errorOut = np.power((outputLayerNodeValues - self.outData), 2) # Mean squared error cost function
-            meanSquaredError = errorOut.sum() / len(self.inData)
+            # ===[ Back Propagation ]===
+            errorOut = np.power((outputLayerNodeValues - self.outData), 2)
+            meanSquaredError = errorOut.sum() / len(self.inData) # Mean squared error cost function
             print(meanSquaredError)
 
-            # Chain Rule dz/dx = dz/dy * dy/dx for finding gradient and minimizing cost function
+            # Chain Rule dC/dW = dZ/dW * dA/dZ * dC/dA for finding gradient and minimizing cost function
+            # C = Cost function
+            # W = previousWeights
+            # Z = (previousWeight * previousActivation + bias)
+            # A = sigmoid(Z)
+
             # Output -> Hidden
-            
+            if hiddenLayers > 1:
+                dZ_dW = hiddenLayerNodeValues[-1]
+            else:
+                dZ_dW = firstLayerNodeValues
+            dA_dZ = self.sigmoid_der(outputLayerWeightSums)
+            dC_dA = (2 / len(self.outData)) * (outputLayerNodeValues - self.outData)
+            # dC_dW = dZ_dW * dA_dZ * dC_dA
+            dC_dW = np.dot(dZ_dW.T, dC_dA * dA_dZ)
 
             # Hidden -> Hidden
-
+            # if hiddenLayers > 1:
+                
+            #     for i in range(hiddenLayers - 1, 0, -1)
 
             #Hidden -> Input
             
