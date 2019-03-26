@@ -1,11 +1,12 @@
 import numpy as np
 import pandas as pd
+import DictionaryBuilder as db
+
 
 mdf = pd.DataFrame()	#Master dataframe accessible by all functions
 
 def import_data(file=""):
 	'''Asks for a dataset and checks if it needs to build a dictionary or not'''
-	import dictionary_builder as db
 	global mdf
 	if mdf.empty:
 		if file == "":
