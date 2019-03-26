@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import DictionaryBuilder as db
 
-
 mdf = pd.DataFrame()	#Master dataframe accessible by all functions
 
 def import_data(file=""):
@@ -44,11 +43,30 @@ def view_data(n=0):
 
 def list_commands():
 	global cmd_list
-	for x in cmd_list:
-		print(x)
+	print('''
+	import [source]      : Imports data from source (URL or File)
+	export [destination] : Exports data to a CSV
+	clear                : Clears current data
+	view [rows]          : View [rows] rows
+	train                : Trains network based on imported data
+	run  [data]          : Get output from network
+	help                 : Show this message
+	exit                 : Exit Otis
+	''')
+
+def train():
+	print("To be implemented")
+
+def run():
+	print("To be implemented")
+
+def clear():
+	mdf.drop(mdf.index, inplace=True)
+	print("Dataframe Cleared")
+	
 
 #Shell starts here
-cmd_list = {'import': [import_data],'export': [export_data],'view':[view_data],'help':[list_commands]}	#Dictionary of possible commands and which function to call with those commands
+cmd_list = {'import': [import_data],'export': [export_data],'view':[view_data],'help':[list_commands],'train':[train],'run':[run],'clear':[clear]}	#Dictionary of possible commands and which function to call with those commands
 while (True):
 	cmd = input('Otis> ')
 	if cmd.lower() == 'exit':
