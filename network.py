@@ -3,7 +3,7 @@ import math
 
 class Network:
     def __init__(self, inData, outData):
-        #check to make sure that indata/outdata match # of rows
+        # TODO:check to make sure that indata/outdata match # of rows
         self.inData = inData
         self.outData = outData
         self.trainedHidden = []
@@ -20,13 +20,13 @@ class Network:
         return expX / expX.sum()
 
     def train(self, epochs):
-        nodesInput = len(self.inData[0]) # will likely have to more ocmplex than this
+        nodesInput = len(self.inData[0]) # will likely have to more complex than this
         nodesOutput = 1 # determine if multiple outputs or  before this and adjust accordingly
         nodesHidden = math.ceil((nodesInput + nodesOutput) / 2) # Mean of the I/O nodes rounded up
-        hiddenLayers = 1 # determine how many hidden layers the user wants, default to 1
+        hiddenLayers = 2 # determine how many hidden layers the user wants, default to 1
 
         # Total number of weights = nodesInput * nodesHidden + nodesOutput * nodesHidden + nodesHidden * hiddenLayers
-        np.random.seed(100)
+        np.random.seed(100) # temporary
         # Returns random values between [0,1) to a given shape
         inputWeights = np.random.rand(nodesInput, nodesHidden) #2x2 each row is the input weights of the hidden layer
         hiddenWeights = np.random.rand(hiddenLayers - 1, nodesHidden, nodesHidden) #2x2x2
@@ -45,28 +45,19 @@ class Network:
             # ===[ Feed Forward ]===
 
             # Input -> Hidden
-            firstLayerWeightSums = np.dot(self.inData, inputWeights)
-            firstLayerNodeValues = self.sigmoid(firstLayerWeightSums)
+            inputLayerNodeValues = self.sigmoid(np.dot(self.inData, inputWeights))
 
-            # print("FLWS")
-            # print(firstLayerWeightSums)
             # print("FLNV")
-            # print(firstLayerNodeValues)
+            # print(inputLayerNodeValues)
 
             # Hidden -> Hidden
             if hiddenLayers > 1:
-                hiddenLayerWeightSums = []
                 hiddenLayerNodeValues = []
-
-                hiddenLayerWeightSums.append(np.dot(firstLayerNodeValues, hiddenWeights[0]))
-                hiddenLayerNodeValues.append(self.sigmoid(hiddenLayerWeightSums[0]))
+                hiddenLayerNodeValues.append(self.sigmoid(np.dot(inputLayerNodeValues, hiddenWeights[0])))
 
                 for i in range(1, hiddenLayers - 1):
-                    hiddenLayerWeightSums.append(np.dot(hiddenLayerNodeValues[i - 1], hiddenWeights[i]))
-                    hiddenLayerNodeValues.append(self.sigmoid(hiddenLayerWeightSums[i]))
+                    hiddenLayerNodeValues.append(self.sigmoid(np.dot(hiddenLayerNodeValues[i - 1], hiddenWeights[i])))
             
-                # print("HLWS")
-                # print(hiddenLayerWeightSums)
                 # print("HLNV")
                 # print(hiddenLayerNodeValues)
 
@@ -74,11 +65,9 @@ class Network:
             if hiddenLayers > 1:
                 outputLayerWeightSums = np.dot(hiddenLayerNodeValues[-1], outputWeights)
             else:
-                outputLayerWeightSums = np.dot(firstLayerNodeValues, outputWeights)
+                outputLayerWeightSums = np.dot(inputLayerNodeValues, outputWeights)
             outputLayerNodeValues = self.sigmoid(outputLayerWeightSums)
 
-            # print("OLWS")
-            # print(outputLayerWeightSums)
             # print("OLNV")
             # print(outputLayerNodeValues)
 
@@ -87,34 +76,27 @@ class Network:
             meanSquaredError = errorOut.sum() / len(self.inData) # Mean squared error cost function
             print(meanSquaredError)
 
-            # Chain Rule dC/dW = dZ/dW * dA/dZ * dC/dA for finding gradient and minimizing cost function
-            # C = Cost function
-            # W = previousWeights
-            # Z = (previousWeight * previousActivation + bias)
-            # A = sigmoid(Z)
-
             # Output -> Hidden
-            if hiddenLayers > 1:
-                dZ_dW = hiddenLayerNodeValues[-1]
-            else:
-                dZ_dW = firstLayerNodeValues
-            dA_dZ = self.sigmoid_der(outputLayerWeightSums)
-            dC_dA = (2 / len(self.outData)) * (outputLayerNodeValues - self.outData)
-            # dC_dW = dZ_dW * dA_dZ * dC_dA
-            dC_dW = np.dot(dZ_dW.T, dC_dA * dA_dZ)
-
+            outputError = self.outData - outputLayerNodeValues
+            outputDelta = outputError * self.sigmoid_der(outputLayerNodeValues)
+            
             # Hidden -> Hidden
-            # if hiddenLayers > 1:
-                
-            #     for i in range(hiddenLayers - 1, 0, -1)
+            hiddenError = np.dot(outputDelta, outputWeights.T)
+            hiddenDelta = hiddenError * self.sigmoid_der(hiddenLayerNodeValues[0])
 
-            #Hidden -> Input
-            
+            # Hidden -> Input
+            inputError = np.dot(hiddenDelta, inputWeights.T)
+            inputDelta = inputError * self.sigmoid_der(inputLayerNodeValues)
+           
+            # Calculate the adjustment to the weights
+            inputAdj = np.dot(self.inData.T, inputDelta)
+            hiddenAdj = np.dot(hiddenLayerNodeValues[0].T, hiddenDelta)
+            outputAdj = np.dot(hiddenLayerNodeValues[-1].T, outputDelta)
 
-            # Update Weights
-            
-
-
+            # Update the Weights
+            inputWeights += inputAdj
+            hiddenWeights[0] += hiddenAdj
+            outputWeights += outputAdj
 
             # clays code
             # hiddenWeights = np.random.rand(len(self.inData[0]),4) 
