@@ -6,6 +6,7 @@ class Network:
         # TODO:check to make sure that indata/outdata match # of rows
         self.inData = inData
         self.outData = outData
+        self.hiddenLayers = 2 # The user defined numbers of hidden layers to build into the network
         self.trainedInputWeights = []
         self.trainedHiddenWeights = []
         self.trainedOutputWeights = []
@@ -14,7 +15,6 @@ class Network:
         return 1 / (1 + np.exp(-x))
 
     def sigmoid_der(self, x):
-        # return self.sigmoid(x) * (1 - self.sigmoid(x))
         return x * (1 - x)
 
     def softmax(self, x):
@@ -22,83 +22,74 @@ class Network:
         return expX / expX.sum()
 
     def train(self, epochs):
-        nodesInput = len(self.inData[0]) # will likely have to more complex than this
-        nodesOutput = len(self.outData[0]) # determine if multiple outputs or  before this and adjust accordingly
+        nodesInput = len(self.inData[0])
+        nodesOutput = len(self.outData[0])
         nodesHidden = math.ceil((nodesInput + nodesOutput) / 2) # Mean of the I/O nodes rounded up
-        hiddenLayers = 2 # determine how many hidden layers the user wants, default to 1
 
-        # Total number of weights = nodesInput * nodesHidden + nodesOutput * nodesHidden + nodesHidden * hiddenLayers
-        # np.random.seed(100) # temporary
         # Returns random values between [0,1) to a given shape
-        inputWeights = np.random.rand(nodesInput, nodesHidden) #2x2 each row is the input weights of the hidden layer
-        hiddenWeights = np.random.rand(hiddenLayers - 1, nodesHidden, nodesHidden) #1x2x2
-        outputWeights = np.random.rand(nodesHidden, nodesOutput) #2x1
-        
-        learningRate = 0.5
-
-        # print("IW")
-        # print(inputWeights)
-        # print("HW")
-        # print(hiddenWeights)
-        # print("OW")
-        # print(outputWeights)
+        inputWeights = np.random.rand(nodesInput, nodesHidden)
+        hiddenWeights = np.random.rand(self.hiddenLayers - 1, nodesHidden, nodesHidden)
+        outputWeights = np.random.rand(nodesHidden, nodesOutput)
 
         for epoch in range(epochs):
-            # ===[ Feed Forward ]===
+            # =====[ Feed Forward ]=====
 
             # Input -> Hidden
             inputLayerNodeValues = self.sigmoid(np.dot(self.inData, inputWeights))
 
-            # print("FLNV")
-            # print(inputLayerNodeValues)
-
             # Hidden -> Hidden
-            if hiddenLayers > 1:
+            if self.hiddenLayers > 1:
                 hiddenLayerNodeValues = []
                 hiddenLayerNodeValues.append(self.sigmoid(np.dot(inputLayerNodeValues, hiddenWeights[0])))
 
-                for i in range(1, hiddenLayers - 1):
+                for i in range(1, self.hiddenLayers - 1):
                     hiddenLayerNodeValues.append(self.sigmoid(np.dot(hiddenLayerNodeValues[i - 1], hiddenWeights[i])))
-            
-                # print("HLNV")
-                # print(hiddenLayerNodeValues)
 
             # Hidden -> Output
-            if hiddenLayers > 1:
+            if self.hiddenLayers > 1:
                 outputLayerWeightSums = np.dot(hiddenLayerNodeValues[-1], outputWeights)
             else:
                 outputLayerWeightSums = np.dot(inputLayerNodeValues, outputWeights)
             outputLayerNodeValues = self.sigmoid(outputLayerWeightSums)
 
-            # print("OLNV")
-            # print(outputLayerNodeValues)
+            # =====[ Back Propagation ]=====
 
-            # ===[ Back Propagation ]===
-
-            # Output
+            # Output -> Hidden
             outputError = self.outData - outputLayerNodeValues
             outputDelta = outputError * self.sigmoid_der(outputLayerNodeValues)
-            
-            # Output -> Hidden
-            hiddenError = np.dot(outputDelta, outputWeights.T)
-            hiddenDelta = hiddenError * self.sigmoid_der(hiddenLayerNodeValues[0])
+
+            # Hidden -> Hidden
+            if self.hiddenLayers > 1:
+                hiddenDelta = []
+                hiddenError = np.dot(outputDelta, outputWeights.T)
+                hiddenDelta.append(hiddenError * self.sigmoid_der(hiddenLayerNodeValues[-1]))
+
+                for i in range(self.hiddenLayers - 3, -1, -1):
+                    hiddenError = np.dot(hiddenDelta[0], hiddenWeights[i + 1])
+                    hiddenDelta.insert(0, hiddenError * self.sigmoid_der(hiddenLayerNodeValues[i]))
 
             # Hidden -> Input
-            inputError = np.dot(hiddenDelta, hiddenWeights[0].T)
+            if self.hiddenLayers > 1:
+                inputError = np.dot(hiddenDelta[0], hiddenWeights[0].T)
+            else:
+                inputError = np.dot(outputDelta, outputWeights.T)
             inputDelta = inputError * self.sigmoid_der(inputLayerNodeValues)
            
             # Calculate the adjustment to the weights
             inputAdj = np.dot(self.inData.T, inputDelta)
-            hiddenAdj = np.dot(inputLayerNodeValues.T, hiddenDelta)
-            outputAdj = np.dot(hiddenLayerNodeValues[0].T, outputDelta)
-
-            # print(inputAdj)
-            # print(hiddenAdj)
-            # print(outputAdj)
+            if self.hiddenLayers > 1:
+                hiddenAdj = []
+                hiddenAdj.append(np.dot(inputLayerNodeValues.T, hiddenDelta[0]))
+                for i in range(1, self.hiddenLayers - 1):
+                    hiddenAdj.append(np.dot(hiddenLayerNodeValues[i - 1].T, hiddenDelta[i]))
+                outputAdj = np.dot(hiddenLayerNodeValues[-1].T, outputDelta)
+            else:
+                outputAdj = np.dot(inputLayerNodeValues.T, outputDelta)
 
             # Update the Weights
             inputWeights += inputAdj
-            hiddenWeights[0] += hiddenAdj
+            for i in range(self.hiddenLayers - 1):
+                hiddenWeights[i] += hiddenAdj[i]
             outputWeights += outputAdj
 
         # Store the weights
@@ -109,7 +100,12 @@ class Network:
 
     def run(self, data):
         firstLayer = self.sigmoid(np.dot(data, self.trainedInputWeights))
-        hiddenLayer = self.sigmoid(np.dot(firstLayer, self.trainedHiddenWeights[0]))
-        outputLayer = self.sigmoid(np.dot(hiddenLayer, self.trainedOutputWeights))
+        if self.hiddenLayers > 1:
+            hiddenLayer = self.sigmoid(np.dot(firstLayer, self.trainedHiddenWeights[0]))
+            for i in range(1, self.hiddenLayers - 1):
+                hiddenLayer = self.sigmoid(np.dot(hiddenLayer, self.trainedHiddenWeights[i]))
+            outputLayer = self.sigmoid(np.dot(hiddenLayer, self.trainedOutputWeights))
+        else:
+            outputLayer = self.sigmoid(np.dot(firstLayer, self.trainedOutputWeights))
 
         print(outputLayer)
