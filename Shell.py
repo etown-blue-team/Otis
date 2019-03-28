@@ -3,6 +3,8 @@ import pandas as pd
 import DictionaryBuilder as db
 
 mdf = pd.DataFrame()	#Master dataframe accessible by all functions
+outdata = pd.DataFrame()
+indata = pd.DataFrame()
 
 def import_data(file=""):
 	'''Asks for a dataset and checks if it needs to build a dictionary or not'''
@@ -38,8 +40,9 @@ def view_data(n=0):
 		print("Empty dataframe. Use import to load a data set")
 	else:
 		if n == 0:
-			n = input("Number of rows: ")
-		print(mdf.head(int(n)))
+			print(mdf)
+		else:
+			print(mdf.head(int(n)))
 
 def list_commands():
 	global cmd_list
@@ -54,14 +57,38 @@ def list_commands():
 	exit                 : Exit Otis
 	''')
 
-def train():
-	print("To be implemented")
+def train(col = -1):
+	if mdf.empty:
+		print("Empty dataframe. Data is needed to train. Use import to import data")
+	else:
+		if col == -1:
+			col = int(input("Which column is output data "))
+			
+			outdata = mdf.iloc[:,col-1:col]
+			indata = mdf.drop(mdf.columns[col-1],axis=1)
+
+			outdata = outdata.values
+			indata = indata.values
+
+			print(outdata)
+			print(indata)
+
+			#Neural RUN
+
+		
+
+		
+
+	
 
 def run():
 	print("To be implemented")
 
 def clear():
+	#TODO: Clear Network Too
 	mdf.drop(mdf.index, inplace=True)
+	indata.drop(indata.index, inplace=True)
+	outdata.drop(outdata.index,inplace=True)
 	print("Dataframe Cleared")
 	
 
