@@ -1,11 +1,17 @@
 import numpy as np
 import pandas as pd
 import DictionaryBuilder as db
+from Network import *
 from sklearn.model_selection import train_test_split
 
 mdf = pd.DataFrame()	#Master dataframe accessible by all functions
 outdata = pd.DataFrame()
 indata = pd.DataFrame()
+
+inRunData = pd.DataFrame()
+outRunData = pd.DataFrame()
+
+neural = Network
 
 def import_data(file=""):
 	'''Asks for a dataset and checks if it needs to build a dictionary or not'''
@@ -71,22 +77,15 @@ def train(col = -1):
 		
 		inTrain, inTest, outTrain, outTest = train_test_split(indata, outdata, test_size=0.3, random_state=101)
 
-		print(inTrain)
-		print(inTest)
-		print(outTrain)
-		print(outTest)
+		#print(inTrain)
+		#print(inTest)
+		#print(outTrain)
+		#print(outTest)
 
-			#Neural RUN
-
-		
-
-		
-
+		neural = Network(inTrain.values,outTrain.values)
+		Network.train(neural, 1000)
+		Network.run(neural, inTest)
 	
-
-def run():
-	print("To be implemented")
-
 def clear():
 	#TODO: Clear Network Too
 	mdf.drop(mdf.index, inplace=True)
@@ -96,7 +95,7 @@ def clear():
 	
 
 #Shell starts here
-cmd_list = {'import': [import_data],'export': [export_data],'view':[view_data],'help':[list_commands],'train':[train],'run':[run],'clear':[clear]}	#Dictionary of possible commands and which function to call with those commands
+cmd_list = {'import': [import_data],'export': [export_data],'view':[view_data],'help':[list_commands],'train':[train],'clear':[clear]}	#Dictionary of possible commands and which function to call with those commands
 while (True):
 	cmd = input('Otis> ')
 	if cmd.lower() == 'exit':
