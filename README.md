@@ -8,7 +8,7 @@
 Created by Blue Team for 2019 Spring Software Engineering at Elizabethtown College
 
 ### Objective
-Our original objective was to create an iterative, neural algorithm that could do basic pattern recognition on a variety of different dataset. As of v1.0 **we have accomplished this goal**
+Our original objective was to create an iterative, neural algorithm that could do basic pattern recognition on a variety of different datasets. As of v1.0 **we have accomplished this goal**
 
 ### Features
 * Has an interactive shell
