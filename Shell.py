@@ -13,10 +13,10 @@ def import_data(file=""):
 	if mdf.empty:
 		if file == "":
 			file = input("Data set: ")
-		df = pd.read_csv(file)
-		for x in list(df):
-			if df[x].dtype is np.dtype('O'):
-				b = db.DictionaryBuilder(df)
+		mdf = pd.read_csv(file)
+		for x in list(mdf):
+			if mdf[x].dtype is np.dtype('O'):
+				b = db.DictionaryBuilder(mdf)
 				b.build()
 				mdf = b.map()
 				break
