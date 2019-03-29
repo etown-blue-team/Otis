@@ -26,4 +26,4 @@ Our original objective was to create an iterative, neural algorithm that could d
 * Ability to store and load pre-trained networks
 * Support for more data formats
 * Build a better API
-* Try implemented the network
+* Try implementing the network
