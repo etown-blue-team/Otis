@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import DictionaryBuilder as db
+from sklearn.model_selection import train_test_split
 
 mdf = pd.DataFrame()	#Master dataframe accessible by all functions
 outdata = pd.DataFrame()
@@ -63,15 +64,17 @@ def train(col = -1):
 	else:
 		if col == -1:
 			col = int(input("Which column is output data "))
-			
-			outdata = mdf.iloc[:,col-1:col]
-			indata = mdf.drop(mdf.columns[col-1],axis=1)
+		
+		col = int(col)
+		outdata = mdf.iloc[:,col-1:col]
+		indata = mdf.drop(mdf.columns[col-1],axis=1)
+		
+		inTrain, inTest, outTrain, outTest = train_test_split(indata, outdata, test_size=0.3, random_state=101)
 
-			outdata = outdata.values
-			indata = indata.values
-
-			print(outdata)
-			print(indata)
+		print(inTrain)
+		print(inTest)
+		print(outTrain)
+		print(outTest)
 
 			#Neural RUN
 
