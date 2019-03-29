@@ -1,8 +1,9 @@
 <p align="center"><a target="_blank" rel="noopener noreferrer"><img width="200" src="https://i.imgur.com/vva7rFG.png" alt="Otis Logo"></a>
 <br></p>
 <h1 align="center"> Otis </h1>
-<br>
+
 [![Requirements Status](https://requires.io/github/etown-blue-team/Otis/requirements.svg?branch=master)](https://requires.io/github/etown-blue-team/Otis/requirements/?branch=master)
+
 
 Created by Blue Team for 2019 Spring Software Engineering at Elizabethtown College
 
@@ -25,4 +26,4 @@ Our original objective was to create an iterative, neural algorithm that could d
 * Ability to store and load pre-trained networks
 * Support for more data formats
 * Build a better API
-* Try implemented the network into other applications
+* Try implemented the network
