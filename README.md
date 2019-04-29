@@ -3,7 +3,7 @@
 <h1 align="center"> Otis </h1>
 
 [![Requirements Status](https://requires.io/github/etown-blue-team/Otis/requirements.svg?branch=master)](https://requires.io/github/etown-blue-team/Otis/requirements/?branch=master)
-
+[![Build Status](https://travis-ci.org/etown-blue-team/Otis.svg?branch=cicd)](https://travis-ci.org/etown-blue-team/Otis)
 
 Created by Blue Team for 2019 Spring Software Engineering at Elizabethtown College
 
