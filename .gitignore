@@ -1,7 +1,6 @@
 bin/
 lib/
 include/
-*.csv
 .vs/
 .DS_Store
 coverage/
