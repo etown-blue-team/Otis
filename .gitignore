@@ -3,6 +3,9 @@ lib/
 include/
 *.csv
 .vs/
+.DS_Store
+coverage/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
