@@ -12,6 +12,7 @@ inRunData = pd.DataFrame()
 outRunData = pd.DataFrame()
 
 neural = Network
+
 class Shell:
 	def __init__(self,id):
 		self.id = id
@@ -44,7 +45,7 @@ class Shell:
 		else:
 			if file == "":
 				file = input("File name: ")
-			mdf.to_csv(str(file))
+			mdf.to_csv(str(file),index=False)
 
 	def view_data(self,n=0):
 		if mdf.empty:
