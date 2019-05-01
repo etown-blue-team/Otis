@@ -8,5 +8,6 @@ install:
   - pip install codecov && codecov -t CODECOV_TOKEN
 script:
   - python -m pytest --cov=. --cov-report html:coverage
+  - python -m py_compile *.py
 after_success:
   - codecov
