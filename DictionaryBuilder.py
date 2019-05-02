@@ -49,3 +49,22 @@ class DictionaryBuilder:
 		for x in self.key_list:
 			self.df[x] = self.df[x].map(self.key_list[x])
 		return self.df
+
+	def clean(self, na=np.nan):
+		'''
+		Looks for missing values and drops those rows.
+		Paramaters:
+			na: The symbol used in the dataset to indicate a missing value
+
+		df = c1  c2  c3
+		     a   b   c
+			 d   ?   f
+
+		>>>clean('?')
+
+		df = c1  c2  c3
+		     a   b   c
+		'''
+
+		self.df.replace({na:np.nan}).dropna(inplace=True)
+		return self.df
