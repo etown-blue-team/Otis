@@ -13,13 +13,25 @@ class Network:
 
     def sigmoid(self, x):
         return 1 / (1 + np.exp(-x))
-
+        
     def sigmoid_der(self, x):
         return x * (1 - x)
 
     def softmax(self, x):
         expX = np.exp(x)
         return expX / expX.sum()
+
+    # Rectified Linear Unit Activiation Function
+    # Not working yet
+    # def sigmoid(self, x): #This is just for quick testing
+    # def relu(self, x):
+        # arr = np.zeros((x.shape))
+        # for i in range(0, len(x) - 1):
+        #     for j in range(0 , len(x[0]) - 1):
+        #         if x[i][j] > 0:
+        #             arr[i][j] = 1
+        # print(arr)
+        # return arr
 
     def train(self, epochs):
         nodesInput = len(self.inData[0])
@@ -108,4 +120,4 @@ class Network:
         else:
             outputLayer = self.sigmoid(np.dot(firstLayer, self.trainedOutputWeights))
 
-        print(outputLayer)
+        print(np.array_str(outputLayer, precision = 2, suppress_small = True))
