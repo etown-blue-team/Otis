@@ -67,4 +67,3 @@ class DictionaryBuilder:
 		'''
 
 		self.df.replace({na:np.nan}).dropna(inplace=True)
-		return self.df
