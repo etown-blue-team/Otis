@@ -3,7 +3,6 @@ import math
 
 class Network:
     def __init__(self, inData, outData):
-        # TODO:check to make sure that indata/outdata match # of rows
         self.inData = inData
         self.outData = outData
         self.hiddenLayers = 2 # The user defined numbers of hidden layers to build into the network
