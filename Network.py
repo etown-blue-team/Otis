@@ -2,6 +2,13 @@ import numpy as np
 import math
 
 class Network:
+    '''
+    Initalizes the network with the input and output data
+
+    Parameters:
+        inData: the input data, the data being tested against
+        outData: the output data, the result expected
+    '''
     def __init__(self, inData, outData):
         self.inData = inData
         self.outData = outData
@@ -10,12 +17,33 @@ class Network:
         self.trainedHiddenWeights = []
         self.trainedOutputWeights = []
 
+
+    '''
+    The sigmoid function, puts everything to be a probability between 0 and 1
+
+    Paramaters:
+        x: the number to be run through the sigmoid
+    '''
     def sigmoid(self, x):
         return 1 / (1 + np.exp(-x))
         
+
+    '''
+    Derivative of the sigmoid function
+
+    Parameters:
+        x: the number to be run through the sigmoid derivative
+    '''
     def sigmoid_der(self, x):
         return x * (1 - x)
 
+
+    '''
+    Softmax function, takes a number and normalizes it into a probability
+
+    Parameters:
+        x: the number to run through the softmax function
+    '''
     def softmax(self, x):
         expX = np.exp(x)
         return expX / expX.sum()
@@ -32,6 +60,14 @@ class Network:
         # print(arr)
         # return arr
 
+    '''
+    Training function
+
+    This is where the magic happens
+
+    Parameters:
+        epochs: the number of epochs to run
+    '''
     def train(self, epochs):
         nodesInput = len(self.inData[0])
         nodesOutput = len(self.outData[0])
@@ -109,6 +145,14 @@ class Network:
         self.trainedOutputWeights = outputWeights
 
 
+    '''
+    This runs data against the already trained network
+
+    Parameters:
+        data: the data to run against the network.
+
+    Returns: the output of the network
+    '''
     def run(self, data):
         firstLayer = self.sigmoid(np.dot(data, self.trainedInputWeights))
         if self.hiddenLayers > 1:
@@ -119,4 +163,6 @@ class Network:
         else:
             outputLayer = self.sigmoid(np.dot(firstLayer, self.trainedOutputWeights))
 
-        print(np.array_str(outputLayer, precision = 2, suppress_small = True))
+
+        output = np.array_str(outputLayer, precision = 2, suppress_small = True)
+        return output

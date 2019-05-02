@@ -18,6 +18,12 @@ class Shell:
 		self.id = id
 
 
+	'''
+	Imports data from a file or URL
+
+	Parameters:
+		file: the path or url to dataset
+	'''
 	def import_data(self,file=""):
 		'''Asks for a dataset and checks if it needs to build a dictionary or not'''
 		global mdf
@@ -38,6 +44,13 @@ class Shell:
 				mdf = pd.DataFrame()
 				self.import_data(file)
 
+	'''
+	Exports data from current dataset after mapping
+
+	Parameters:
+		file: the file to export to
+
+	'''
 	def export_data(self,file=""):
 		'''Asks for a file name and writes out the modified dataframe'''
 		global mdf
@@ -48,6 +61,15 @@ class Shell:
 				file = input("File name: ")
 			mdf.to_csv(str(file),index=False)
 
+
+	'''
+	Shows the data in the current dataset
+
+	Parameters:
+		n: the number of rows to show
+	Returns:
+		Success
+	'''
 	def view_data(self,n=0):
 		if mdf.empty:
 			print("Empty dataframe. Use import to load a data set")
@@ -60,6 +82,10 @@ class Shell:
 				print(mdf.head(int(n)))
 				return 1
 
+
+	'''
+	Shows availble commands
+	'''
 	def list_commands(self):
 		global cmd_list
 		print('''
@@ -67,12 +93,19 @@ class Shell:
 		export [destination] : Exports data to a CSV
 		clear                : Clears current data
 		view [rows]          : View [rows] rows
-		train                : Trains network based on imported data
-		run  [data]          : Get output from network
+		train                : Trains network based on imported data then runs the last line
 		help                 : Show this message
 		exit                 : Exit Otis
 		''')
 
+
+	'''
+	Trains the network using data in dataset
+
+	Parameters:
+		col: the output column
+		
+	'''
 	def train(self,col = -1):
 		if mdf.empty:
 			print("Empty dataframe. Data is needed to train. Use import to import data")
@@ -84,25 +117,41 @@ class Shell:
 			outdata = mdf.iloc[:,col-1:col]
 			indata = mdf.drop(mdf.columns[col-1],axis=1)
 			
-			inTrain, inTest, outTrain, outTest = train_test_split(indata, outdata, test_size=0.3, random_state=101)
 
-			#print(inTrain)
-			#print(inTest)
-			#print(outTrain)
-			#print(outTest)
+			inTest = indata.tail(1)
+			outTest = outdata.tail(1)
+
+			inTrain = indata[:-1]
+			outTrain = outdata[:-1]
 
 			neural = Network(inTrain.values,outTrain.values)
 			Network.train(neural, 1000)
-			Network.run(neural, inTest)
-		
+			outputData = Network.run(neural, inTest)
+
+
+			print("\n\n-= Tested Data =-")
+			print(inTest)
+			print("-= Otis Guess =-")
+			print(outputData)
+			print("-= Actual Response =-")
+			print(outTest)
+
+			
+
+	'''
+	Clears the dataset
+	'''
 	def clear(self):
-		#TODO: Clear Network Too
 		mdf.drop(mdf.index, inplace=True)
 		indata.drop(indata.index, inplace=True)
 		outdata.drop(outdata.index,inplace=True)
 		print("Dataframe Cleared")
 		
 
+	'''
+	The shell loop
+
+	'''
 	#Shell starts here
 	def interact(self):
 		cmd_list = {'import': [self.import_data],'export': [self.export_data],'view':[self.view_data],'help':[self.list_commands],'train':[self.train],'clear':[self.clear]}	#Dictionary of possible commands and which function to call with those commands
