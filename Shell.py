@@ -28,6 +28,7 @@ class Shell:
 			for x in list(mdf):
 				if mdf[x].dtype is np.dtype('O'):
 					b = db.DictionaryBuilder(mdf)
+					b.clean()
 					b.build()
 					mdf = b.map()
 					break
